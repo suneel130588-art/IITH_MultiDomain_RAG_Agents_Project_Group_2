@@ -18,6 +18,9 @@ Domain Check, Answer and Safety — produce evidence-grounded answers with citat
 | `notebooks/` | `MultiDomain_RAG_Agents_v2.9_final.ipynb` | Final submitted version |
 | `docs/` | `MultiDomain_RAG_Agents_Project_Presentation.pptx` | Project presentation |
 | `docs/` | `MultiDomain_RAG_Agents_Project_Report.pdf` | Project report |
+| `docs/` | `Test_Report.docx` / `Test_Report.pdf` | Test report: test plan, T1–T8 results (incl. web-app and GitHub deployment tests), defect log |
+| `docs/` | `RAG_30Q_Test_Report.xlsx` | Final 30-question test: v2.9 results, 18 in-dataset questions, version matrix, failure causes, web-app and deployment checks |
+| `docs/` | `Retrieval_Parameter_Study.xlsx` | Retrieval experiment: chunking, embedding models, search methods, top-k, legal scope, final choices |
 | `docs/` | `RAG_Test_Report_v2.0_to_v2.9.xlsx` | Version-wise test report: questions, answers, accuracy and failure reasons |
 | `docs/` | `App_30Q_Check_Result.xlsx` | The 30 test questions run through the web application |
 | `docs/` | `RAGBench_Indexed_Data_5_Domains.xlsx` | The indexed RAGBench rows (200 per domain) with questions and reference answers |
