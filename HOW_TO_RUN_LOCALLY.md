@@ -6,6 +6,13 @@ This guide takes you from a fresh copy of the code to the assistant running in y
 It is written for Windows; the macOS / Linux commands are given where they differ.
 Allow about 20 minutes of setup, plus a one-time index build (see step 6).
 
+**Two ways to run it**
+
+| | Way | Steps |
+|---|---|---|
+| A | **One click (Windows):** `web_app\run_web_app.bat` sets everything up and starts the app | 1 → 2 → 3 → **Quick start** |
+| B | **Manual (Windows, macOS, Linux):** type the commands yourself | 1 → 2 → 3 → 4 → 5 → 6 → 7 |
+
 ---
 
 ## 1. What you need
@@ -46,6 +53,7 @@ IITH_MultiDomain_RAG_Agents_Project_Group_2/
 │   ├── MultiDomainAgent.py   ← loads the notebook's pipeline
 │   ├── requirements.txt      ← Python packages
 │   ├── .env.example          ← template for your API key
+│   ├── run_web_app.bat       ← one-click setup and start (Windows)
 │   └── static/               ← web pages (login, assistant, test questions)
 └── docs/                     ← report, presentation, data
 ```
@@ -56,11 +64,38 @@ IITH_MultiDomain_RAG_Agents_Project_Group_2/
 
 1. Go to <https://console.groq.com> and sign in (Google or e-mail).
 2. Open **API Keys → Create API Key**, give it a name, and copy the key. It starts with `gsk_`.
-3. Keep it private. You will paste it into a file in step 5.
+3. Keep it private. You will paste it into a file in step 5 (or when the batch file asks for it).
 
 ---
 
-## 4. Create a Python environment and install the packages
+## Quick start on Windows: `run_web_app.bat` (way A)
+
+1. *(Optional, saves the first build)* copy the ready-made `chroma_multidomain` folder into `web_app\` (see step 6).
+2. Open the `web_app` folder and **double-click `run_web_app.bat`**.
+3. **First time only**, the batch file:
+
+    - finds Python 3.12,
+    - creates the environment `web_app\.venv` and installs `requirements.txt` (5–15 minutes),
+    - creates `web_app\.env` and **opens it in Notepad**: replace `gsk_your_key_here` with your own key,
+      **save**, and **close Notepad**; the setup then continues.
+
+4. It starts the app. On the very first start without the ready-made index it builds the index
+   (15–60 minutes depending on the CPU; once only).
+5. **Your browser opens http://127.0.0.1:8001 by itself** as soon as the app is ready.
+6. Keep the black window open while you use the app. To stop: press **Ctrl + C** in it, or close it.
+
+Every later start: double-click `run_web_app.bat` again; it skips the setup and the app is ready in
+about 30 seconds.
+
+| Tip | How |
+|---|---|
+| Use another port | open a terminal in `web_app` and run `run_web_app.bat 8002` |
+| Add a login | add `APP_USER=iith` and `APP_PASSWORD=…` lines to `web_app\.env` (step 9) |
+| Windows shows "Windows protected your PC" | click **More info → Run anyway** (files from a downloaded ZIP are marked as from the internet) |
+
+---
+
+## 4. Create a Python environment and install the packages (way B)
 
 Open **PowerShell** (Windows) or **Terminal** (macOS/Linux) and go into the `web_app` folder:
 
@@ -84,7 +119,7 @@ Installation takes 5–15 minutes; PyTorch (used by the embedding model) is the 
 
 ---
 
-## 5. Add your API key
+## 5. Add your API key (way B; the batch file does this for you)
 
 Copy the template to a file named `.env` **inside the `web_app` folder**, then put your key in it.
 
@@ -110,17 +145,17 @@ Save and close. `.env` is ignored by Git, so it is never uploaded.
 ## 6. (Recommended) Skip the long first build
 
 On the first start the app builds its search index: it downloads the RAGBench data, cuts it into
-**14,704 chunks** and embeds each one. On a normal laptop CPU this takes **about 1 hour**
-(a few minutes with an NVIDIA GPU). It happens only once; the index is saved in `web_app/chroma_multidomain/`.
+**14,704 chunks** and embeds each one. On a laptop CPU this takes **15–60 minutes** (15.5 minutes
+measured on a Core i5 laptop; a few minutes with an NVIDIA GPU). It happens only once; the index is saved in `web_app/chroma_multidomain/`.
 
 To skip it, ask the team for the ready-made **`chroma_multidomain`** folder (≈ 170 MB, not in Git)
 and copy it into `web_app/`, so the result is `web_app/chroma_multidomain/`.
 
 ---
 
-## 7. Start the application
+## 7. Start the application (way B)
 
-From the `web_app` folder:
+From the `web_app` folder (with way A the batch file runs this command for you):
 
 **Windows:**
 ```powershell
@@ -143,7 +178,7 @@ techqa    (customer_support): 200 rows -> 3701 chunks
 hotpotqa  (general): 200 rows -> 817 chunks
 161 contracts registered for contract-scoped legal search.
 Loaded 14704 chunks from 5 domains.
-Embedding 14704 chunks into Chroma at ... (first run)...     ← first start only (about 1 hour on CPU)
+Embedding 14704 chunks into Chroma at ... (first run)...     ← first start only (15–60 min on CPU)
 Loaded 14704 chunks from Chroma at ...                      ← every later start (about 30 seconds)
 Multi-domain RAG chat available at http://127.0.0.1:8001
 ```
@@ -178,9 +213,15 @@ A typical answer takes 5–30 seconds.
 ## 9. Optional: add a login
 
 Without a password the app opens directly. To require a login (recommended before sharing it
-with anyone), set a password before starting:
+with anyone), set a password before starting.
 
-**Windows (PowerShell):**
+**Easiest (works for the batch file and the manual start):** add two lines to `web_app/.env`:
+```
+APP_USER=iith
+APP_PASSWORD=choose-a-password
+```
+
+**Or set it for one start only — Windows (PowerShell):**
 ```powershell
 $env:APP_USER = "iith"
 $env:APP_PASSWORD = "choose-a-password"
@@ -203,7 +244,10 @@ To let people on other computers use it, put a tunnel such as ngrok in front of 
 | `python` is not recognized | Reinstall Python and tick "Add python.exe to PATH", or use `py -3.12` instead of `python` |
 | `RuntimeError: GROQ_API_KEY is not set` | `.env` is missing or in the wrong folder. It must be `web_app/.env`, with the line `GROQ_API_KEY=gsk_…` |
 | `Groq key loaded: False` | The key does not start with `gsk_`; copy it again from console.groq.com |
-| The first start runs for a long time | Normal on CPU (about 1 hour, once). Use the ready-made `chroma_multidomain` folder (step 6) |
+| The first start runs for a long time | Normal on CPU (15–60 minutes, once). Use the ready-made `chroma_multidomain` folder (step 6) |
+| Batch file says ".env still contains the placeholder key" | Open `web_app\.env`, put your own key after `GROQ_API_KEY=`, save, and double-click the batch file again |
+| Batch file says "Python was not found" | Install Python 3.12 with "Add python.exe to PATH" ticked, then run it again |
+| Batch file closes at once / package install failed | Check the internet connection and run it again; it deletes the half-made `.venv` and retries the install |
 | `Address already in use` / port busy | Use another port, e.g. `--port 8002`, and open that address |
 | An answer fails with "rate limit" | Groq's free tier has per-minute limits; wait a minute and ask again |
 | Download errors from Hugging Face | Check the internet connection (or proxy) and start again; finished downloads are reused |

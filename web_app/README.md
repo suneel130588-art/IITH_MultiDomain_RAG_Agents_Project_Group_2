@@ -9,8 +9,13 @@ questions and Gradio), so the web app uses exactly the notebook's five agents, L
 | `web_app.py` | web server: serves the page, answers `POST /api/chat`, optional login |
 | `MultiDomainAgent.py` | loads the notebook and returns the compiled LangGraph `assistant` |
 | `static/index.html`, `static/app.js`, `static/style.css` | the browser page |
+| `run_web_app.bat` | Windows one-click setup and start (creates `.venv`, installs packages, asks for the key, opens the browser) |
 
 ## Run
+
+**Windows, one click:** double-click `run_web_app.bat` (full steps in `../HOW_TO_RUN_LOCALLY.md`).
+
+**Manual:**
 
 ```powershell
 cd web_app
@@ -23,5 +28,5 @@ copy .env.example .env        # then put your own GROQ_API_KEY in .env
 Open `http://127.0.0.1:8001`. The first start embeds about 14,700 chunks into `chroma_multidomain/`
 (slow on CPU); later starts reuse it.
 
-Optional login: set the environment variable `APP_PASSWORD` before starting; the user name is `iith`.
+Optional login: add `APP_USER=iith` and `APP_PASSWORD=…` to `.env` (or set them as environment variables).
 Use this before exposing the server through a tunnel, so others cannot spend your Groq quota.
