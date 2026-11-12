@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#13254a">
+    <title>Multi-Domain Agentic RAG Assistant · IIT Hyderabad capstone</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- ============ institute strip + header ============ -->
+      <div class="strip">
+        <span>Indian Institute of Technology Hyderabad · Capstone Project</span>
+        <span class="strip-right"><span class="status-dot" aria-hidden="true"></span>Knowledge base ready · Final version</span>
+      </div>
+      <header class="header">
+        <a class="brand" href="/" aria-label="Home">
+          <span class="emblem" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
+              <circle cx="20" cy="10.5" r="3.4" fill="currentColor"/>
+              <circle cx="10.5" cy="26" r="3.4" fill="currentColor"/>
+              <circle cx="29.5" cy="26" r="3.4" fill="currentColor"/>
+              <circle cx="20" cy="21" r="4.6" stroke="currentColor" stroke-width="2.2"/>
+              <path d="M20 13.9v2.5M16.1 23.6l-3.2 1.6M23.9 23.6l3.2 1.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="brand-text">
+            <strong>Multi-Domain Agentic RAG Assistant</strong>
+            <small>Evidence-grounded answers across five domains</small>
+          </span>
+        </a>
+        <nav class="tabs" aria-label="Sections">
+          <button class="tab active" type="button" data-view="assistant">Assistant</button>
+          <button class="tab" type="button" data-view="how">How it works</button>
+          <button class="tab" type="button" data-view="kb">Knowledge base</button>
+          <button class="tab" type="button" data-view="results">Results</button>
+        </nav>
+        <div class="header-links">
+          <a class="header-link" href="/questions">Test questions</a>
+          <a class="header-link" href="/dataset">Dataset (Excel)</a>
+          <a class="header-link" href="/logout">Sign out</a>
+        </div>
+        <button class="primary-button" id="new-search" type="button"><span aria-hidden="true">＋</span> New search</button>
+      </header>
+
+      <div class="body">
+        <!-- ============ sidebar ============ -->
+        <aside class="sidebar" aria-label="Sidebar">
+          <section class="side-card">
+            <h2 class="side-title">Recent questions</h2>
+            <ul class="history" id="history"><li class="history-empty">Your questions appear here. Click one to jump back to its answer.</li></ul>
+          </section>
+          <section class="side-card">
+            <h2 class="side-title">Domains</h2>
+            <ul class="legend">
+              <li data-domain="biomedical"><span class="dot"></span>Biomedical</li>
+              <li data-domain="legal"><span class="dot"></span>Legal</li>
+              <li data-domain="finance"><span class="dot"></span>Finance</li>
+              <li data-domain="customer_support"><span class="dot"></span>Customer support</li>
+              <li data-domain="general"><span class="dot"></span>General</li>
+            </ul>
+          </section>
+          <section class="side-card tips">
+            <h2 class="side-title">Tips</h2>
+            <ul>
+              <li>Ask one question at a time; the domain is detected automatically.</li>
+              <li>For a contract, put its name in the question (see the Knowledge base tab).</li>
+              <li>Click a citation like <code>RAG-00273</code> to see its source.</li>
+              <li>Name medicines to trigger the OpenFDA label check.</li>
+            </ul>
+          </section>
+        </aside>
+
+        <!-- ============ views ============ -->
+        <main class="main">
+          <!-- Assistant -->
+          <section class="view active" id="view-assistant" data-view="assistant">
+            <div class="scroll" id="scroll">
+              <section class="welcome" id="welcome">
+                <div class="hero">
+                  <span class="eyebrow">Capstone project · IIT Hyderabad</span>
+                  <h1>Ask once. Get a <span class="accent">cited answer</span> from the right domain.</h1>
+                  <p class="lead">Five LangGraph agents route your question, search the RAGBench knowledge base, check medicines against OpenFDA, write an answer with a citation for every fact, and verify every statement before you see it.</p>
+                </div>
+
+                <div class="stats" aria-label="Key figures">
+                  <div class="stat"><strong>5</strong><span>domains</span></div>
+                  <div class="stat"><strong>1,000</strong><span>indexed rows</span></div>
+                  <div class="stat"><strong>14,704</strong><span>searchable chunks</span></div>
+                  <div class="stat"><strong>5</strong><span>LangGraph agents</span></div>
+                  <div class="stat highlight"><strong>83%</strong><span>correct on the 30-question test</span></div>
+                </div>
+
+                <h2 class="section-title">Try an example</h2>
+                <div class="examples">
+                  <button class="example" type="button" data-domain="biomedical" data-prompt="What do neuraminidase inhibitors target?">
+                    <span class="example-tag">Biomedical</span><strong>What do neuraminidase inhibitors target?</strong><small>Research-paper fact <em>Ask →</em></small>
+                  </button>
+                  <button class="example" type="button" data-domain="legal" data-prompt="In the MOELIS — STRATEGIC ALLIANCE AGREEMENT, is one party required to deposit its source code into escrow with a third party?">
+                    <span class="example-tag">Legal</span><strong>Moelis alliance agreement: is source code put in escrow?</strong><small>Searches only the named contract <em>Ask →</em></small>
+                  </button>
+                  <button class="example" type="button" data-domain="finance" data-prompt="What is the yearly amortization rate related to the trademarks?">
+                    <span class="example-tag">Finance</span><strong>What is the yearly amortization rate related to the trademarks?</strong><small>Annual-report text and tables <em>Ask →</em></small>
+                  </button>
+                  <button class="example" type="button" data-domain="customer_support" data-prompt="Why does the other instance of my multi-instance qmgr seem to hang after a failover? Queue manager will not start after failover.">
+                    <span class="example-tag">Customer support</span><strong>Queue manager hangs after a failover — why?</strong><small>IBM MQ technote <em>Ask →</em></small>
+                  </button>
+                  <button class="example" type="button" data-domain="general" data-prompt="Which actor from the film How to Steal a Million attended the Royal Academy of Dramatic Art?">
+                    <span class="example-tag">General · two-step</span><strong>Which How to Steal a Million actor attended RADA?</strong><small>Links two passages <em>Ask →</em></small>
+                  </button>
+                  <button class="example" type="button" data-domain="biomedical" data-prompt="Is it safe to take warfarin together with aspirin?">
+                    <span class="example-tag">Health · OpenFDA</span><strong>Is it safe to take warfarin together with aspirin?</strong><small>Medicine label check <em>Ask →</em></small>
+                  </button>
+                </div>
+              </section>
+
+              <section class="results" id="results" aria-live="polite"></section>
+            </div>
+
+            <div class="composer">
+              <form class="search" id="search-form" autocomplete="off">
+                <span class="search-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+                <label class="sr-only" for="question">Your question</label>
+                <textarea id="question" rows="1" maxlength="4000" placeholder="Ask any question — biomedical, legal, finance, customer support or general…" required></textarea>
+                <span class="counter" id="counter" aria-hidden="true"></span>
+                <button class="search-button" id="search-button" type="submit">
+                  <span>Search</span>
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </form>
+              <p class="composer-note"><kbd>Enter</kbd> search · <kbd>Shift</kbd>+<kbd>Enter</kbd> new line · <kbd>/</kbd> focus the search box · answers come only from RAGBench · not professional advice · questions are sent to Groq</p>
+            </div>
+          </section>
+
+          <!-- How it works -->
+          <section class="view" id="view-how" data-view="how">
+            <div class="page">
+              <h1 class="page-title">How it works</h1>
+              <p class="page-lead">Every question goes through the same five agents, in a fixed order, built as a LangGraph <code>StateGraph</code>. Each agent reads the shared state, does one job and writes its result back.</p>
+              <ol class="flow">
+                <li><span class="flow-num">1</span><div><strong>Router Agent</strong><small><code>router</code> · LLM (structured)</small><p>Classifies the question into a domain, rates severity and emergency, and extracts a named contract and any medicine names.</p></div></li>
+                <li><span class="flow-num">2</span><div><strong>Retrieval Agent</strong><small><code>retrieval</code> · no LLM (one for two-step questions)</small><p>Hybrid search in that domain: MiniLM vectors + BM25 keywords, merged by Reciprocal Rank Fusion (top 8; 12 inside a named contract). Adds finance tables, error-code matches and a second-hop search for two-step questions.</p></div></li>
+                <li><span class="flow-num">3</span><div><strong>Domain Check Agent</strong><small><code>domain_check</code> · OpenFDA + LLM only when medicines are named</small><p>For health questions, fetches the official medicine labels from OpenFDA and keeps only interaction findings whose quote is really in the label.</p></div></li>
+                <li><span class="flow-num">4</span><div><strong>Answer Agent</strong><small><code>answer</code> · LLM (free text)</small><p>Writes the answer from the evidence only, following the domain's rules, with a source ID after every fact.</p></div></li>
+                <li><span class="flow-num">5</span><div><strong>Safety Agent</strong><small><code>safety</code> · LLM audit (1–2×), repair if needed</small><p>Removes citations to sources that were not retrieved, audits every statement against the evidence and OpenFDA labels, removes only statements two audits agree are unsupported, and replaces the answer with emergency advice when needed.</p></div></li>
+              </ol>
+              <h2 class="section-title">Technology</h2>
+              <div class="tech">
+                <div><strong>LangGraph</strong><span>5-agent workflow over a shared state</span></div>
+                <div><strong>Groq · gpt-oss-20b</strong><span>LLM, temperature 0</span></div>
+                <div><strong>all-MiniLM-L6-v2</strong><span>384-dimensional embeddings</span></div>
+                <div><strong>Chroma</strong><span>vector store (saved index)</span></div>
+                <div><strong>BM25 (rank-bm25)</strong><span>keyword search per domain</span></div>
+                <div><strong>RRF, k = 60</strong><span>merges the two rankings</span></div>
+                <div><strong>OpenFDA</strong><span>official medicine labels</span></div>
+                <div><strong>RAGBench</strong><span>5 subsets × 200 rows (CC BY 4.0)</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Knowledge base -->
+          <section class="view" id="view-kb" data-view="kb">
+            <div class="page">
+              <h1 class="page-title">Knowledge base</h1>
+              <p class="page-lead">RAGBench benchmark data: 200 training rows from each of five subsets, chunked into 1,200-character pieces with 150-character overlap. Only the documents are indexed — never the benchmark's questions or answers.</p>
+              <div class="kb-grid">
+                <article class="kb" data-domain="biomedical"><span class="example-tag">Biomedical</span><h3>COVID-19 research papers</h3><p>RAGBench <code>covidqa</code> · CORD-19 passages</p><dl><div><dt>Chunks</dt><dd>713</dd></div><div><dt>Rule</dt><dd>no diagnosis or dose</dd></div></dl><button type="button" class="kb-ask" data-prompt="What is the incubation period of MERS?">Ask: incubation period of MERS →</button></article>
+                <article class="kb" data-domain="legal"><span class="example-tag">Legal</span><h3>Commercial contracts</h3><p>RAGBench <code>cuad</code> · 161 SEC EDGAR contracts</p><dl><div><dt>Chunks</dt><dd>8,430</dd></div><div><dt>Rule</dt><dd>no legal advice</dd></div></dl><button type="button" class="kb-ask" data-prompt="In the MOELIS — STRATEGIC ALLIANCE AGREEMENT, is one party required to deposit its source code into escrow with a third party?">Ask: Moelis escrow clause →</button></article>
+                <article class="kb" data-domain="finance"><span class="example-tag">Finance</span><h3>Company annual reports</h3><p>RAGBench <code>finqa</code> · 10-K text and tables</p><dl><div><dt>Chunks</dt><dd>1,043</dd></div><div><dt>Rule</dt><dd>show calculations, no investment advice</dd></div></dl><button type="button" class="kb-ask" data-prompt="What is the yearly amortization rate related to the trademarks?">Ask: trademark amortization →</button></article>
+                <article class="kb" data-domain="customer_support"><span class="example-tag">Customer support</span><h3>IBM technotes</h3><p>RAGBench <code>techqa</code> · technotes and security bulletins</p><dl><div><dt>Chunks</dt><dd>3,701</dd></div><div><dt>Rule</dt><dd>only steps in the excerpts</dd></div></dl><button type="button" class="kb-ask" data-prompt="Why does the other instance of my multi-instance qmgr seem to hang after a failover? Queue manager will not start after failover.">Ask: queue manager failover →</button></article>
+                <article class="kb" data-domain="general"><span class="example-tag">General</span><h3>Wikipedia paragraphs</h3><p>RAGBench <code>hotpotqa</code> · multi-hop questions</p><dl><div><dt>Chunks</dt><dd>817</dd></div><div><dt>Rule</dt><dd>answer only from the excerpts</dd></div></dl><button type="button" class="kb-ask" data-prompt="In what school district is Governor John R. Rogers High School, named after John Rankin Rogers, located?">Ask: John R. Rogers High School →</button></article>
+              </div>
+              <p class="page-note">Total: 1,000 rows · 3,211 unique documents · 14,704 chunks. The full list of rows and ready-to-paste questions is in <code>RAGBench_Indexed_Data_5_Domains.xlsx</code>.</p>
+            </div>
+          </section>
+
+          <!-- Results -->
+          <section class="view" id="view-results" data-view="results">
+            <div class="page">
+              <h1 class="page-title">Results</h1>
+              <p class="page-lead">The same 30 questions (6 per domain) were run on every version and graded by a separate judge model (gpt-oss-120b).</p>
+              <div class="stats big">
+                <div class="stat highlight"><strong>83%</strong><span>raw · 25 of 30 correct</span></div>
+                <div class="stat"><strong>89%</strong><span>cleaned · 25 of 28 (2 faulty reference answers removed)</span></div>
+                <div class="stat"><strong>96%</strong><span>answerable · 25 of 26 (also without 2 questions that name no company)</span></div>
+                <div class="stat"><strong>100%</strong><span>routing · 30 of 30 to the right domain</span></div>
+              </div>
+              <h2 class="section-title">Correct answers per version (of 30)</h2>
+              <div class="bars" id="bars"></div>
+              <h2 class="section-title">Final version by domain (of 6)</h2>
+              <div class="bars domainbars" id="domainbars"></div>
+              <p class="page-note">A test with the 6× larger gpt-oss-120b model gave the same 25 of 30, so the remaining misses come from the data (faulty references, questions without a company name), not from model size.</p>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <template id="result-template">
+      <article class="result">
+        <header class="result-head">
+          <div class="result-top">
+            <span class="result-label">Question</span>
+            <div class="result-actions">
+              <button class="mini-button copy" type="button" title="Copy the answer">Copy answer</button>
+              <button class="mini-button again" type="button" title="Ask this question again">Ask again</button>
+            </div>
+          </div>
+          <h2 class="result-question"></h2>
+          <div class="result-meta"></div>
+        </header>
+        <ol class="pipeline">
+          <li data-step="router"><span class="step-dot"></span><div><strong>Router Agent</strong><small>Waiting…</small></div></li>
+          <li data-step="retrieval"><span class="step-dot"></span><div><strong>Retrieval Agent</strong><small>Waiting…</small></div></li>
+          <li data-step="domain_check"><span class="step-dot"></span><div><strong>Domain Check Agent</strong><small>Waiting…</small></div></li>
+          <li data-step="answer"><span class="step-dot"></span><div><strong>Answer Agent</strong><small>Waiting…</small></div></li>
+          <li data-step="safety"><span class="step-dot"></span><div><strong>Safety Agent</strong><small>Waiting…</small></div></li>
+        </ol>
+        <div class="result-body">
+          <div class="answer-card">
+            <div class="answer-banner"></div>
+            <div class="answer-text">
+              <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton short"></div>
+            </div>
+            <details class="notes" hidden><summary>Safety Agent notes</summary><ul></ul></details>
+          </div>
+          <aside class="sources">
+            <h3>Sources <span class="count"></span></h3>
+            <div class="source-list"><div class="skeleton tall"></div><div class="skeleton tall"></div></div>
+          </aside>
+        </div>
+      </article>
+    </template>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

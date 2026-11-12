@@ -1,0 +1,9 @@
+# Never commit secrets or local runtime data
+.env
+.env.*
+!.env.example
+*.key
+*password*
+chroma*/
+.ipynb_checkpoints/
+__pycache__/
