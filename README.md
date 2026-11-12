@@ -1,6 +1,8 @@
 # Multi-Domain Agentic RAG Assistant — Group 2
 
 Capstone project, IIT Hyderabad (November 2026).
+Repository: <https://github.com/suneel130588-art/IITH_MultiDomain_RAG_Agents_Project_Group_2>
+· Run it locally: [`HOW_TO_RUN_LOCALLY.md`](HOW_TO_RUN_LOCALLY.md)
 
 A LangGraph multi-agent, hybrid-retrieval question-answering system over five RAGBench domains
 (biomedical, legal, finance, customer support, general knowledge). Five agents — Router, Retrieval,

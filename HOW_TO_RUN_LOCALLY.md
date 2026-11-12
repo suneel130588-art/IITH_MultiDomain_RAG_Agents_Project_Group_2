@@ -25,19 +25,21 @@ Allow about 20 minutes of setup, plus a one-time index build (see step 6).
 
 ## 2. Get the code
 
-The repository is private, so ask the team to add your GitHub account as a collaborator, or to send you a ZIP.
+Repository: <https://github.com/suneel130588-art/IITH_MultiDomain_RAG_Agents_Project_Group_2>
+(if it is not visible to you, ask the team for access or for a ZIP).
 
 **Option A, with Git:**
 ```powershell
-git clone https://github.com/suneel130588-art/MultiDomain_RAG_Agents_Project_Group_2.git
-cd MultiDomain_RAG_Agents_Project_Group_2
+git clone https://github.com/suneel130588-art/IITH_MultiDomain_RAG_Agents_Project_Group_2.git
+cd IITH_MultiDomain_RAG_Agents_Project_Group_2
 ```
 
-**Option B, ZIP:** unzip it and open a terminal in the unzipped folder.
+**Option B, ZIP:** on the repository page click **Code → Download ZIP**, unzip it and open a terminal
+in the unzipped folder.
 
 Keep the folder structure as it is. The web app loads the notebook from `../notebooks/`:
 ```
-MultiDomain_RAG_Agents_Project_Group_2/
+IITH_MultiDomain_RAG_Agents_Project_Group_2/
 ├── notebooks/MultiDomain_RAG_Agents_v2.9_final.ipynb   ← the agents' code (the app runs it)
 ├── web_app/
 │   ├── web_app.py            ← web server
