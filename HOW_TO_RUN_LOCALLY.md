@@ -54,6 +54,7 @@ IITH_MultiDomain_RAG_Agents_Project_Group_2/
 │   ├── requirements.txt      ← Python packages
 │   ├── .env.example          ← template for your API key
 │   ├── run_web_app.bat       ← one-click setup and start (Windows)
+│   ├── stop_web_app.bat      ← one-click stop (Windows)
 │   └── static/               ← web pages (login, assistant, test questions)
 └── docs/                     ← report, presentation, data
 ```
@@ -82,14 +83,22 @@ IITH_MultiDomain_RAG_Agents_Project_Group_2/
 4. It starts the app. On the very first start without the ready-made index it builds the index
    (15–60 minutes depending on the CPU; once only).
 5. **Your browser opens http://127.0.0.1:8001 by itself** as soon as the app is ready.
-6. Keep the black window open while you use the app. To stop: press **Ctrl + C** in it, or close it.
+6. Keep the black window open while you use the app.
+
+**To stop the app**, use any one of these:
+
+| Way | What to do |
+|---|---|
+| **Stop batch file** | double-click **`web_app\stop_web_app.bat`**; it prints "Stopped the web app on port 8001" (it stops only the web app's Python process on that port) |
+| Keyboard | click the black `run_web_app.bat` window and press **Ctrl + C** (answer **Y** if asked "Terminate batch job?") |
+| Close | close the black `run_web_app.bat` window |
 
 Every later start: double-click `run_web_app.bat` again; it skips the setup and the app is ready in
 about 30 seconds.
 
 | Tip | How |
 |---|---|
-| Use another port | open a terminal in `web_app` and run `run_web_app.bat 8002` |
+| Use another port | open a terminal in `web_app` and run `run_web_app.bat 8002`; stop it with `stop_web_app.bat 8002` |
 | Add a login | add `APP_USER=iith` and `APP_PASSWORD=…` lines to `web_app\.env` (step 9) |
 | Windows shows "Windows protected your PC" | click **More info → Run anyway** (files from a downloaded ZIP are marked as from the internet) |
 
@@ -183,7 +192,8 @@ Loaded 14704 chunks from Chroma at ...                      ← every later star
 Multi-domain RAG chat available at http://127.0.0.1:8001
 ```
 
-Leave this window open while you use the app. To stop it, press **Ctrl + C**.
+Leave this window open while you use the app. To stop it, press **Ctrl + C**
+(on Windows you can also double-click `web_app\stop_web_app.bat`).
 
 > On a CPU the app also prints a warning that embedding takes about 1–1.5 hours. That is expected
 > on the first start.
@@ -248,7 +258,8 @@ To let people on other computers use it, put a tunnel such as ngrok in front of 
 | Batch file says ".env still contains the placeholder key" | Open `web_app\.env`, put your own key after `GROQ_API_KEY=`, save, and double-click the batch file again |
 | Batch file says "Python was not found" | Install Python 3.12 with "Add python.exe to PATH" ticked, then run it again |
 | Batch file closes at once / package install failed | Check the internet connection and run it again; it deletes the half-made `.venv` and retries the install |
-| `Address already in use` / port busy | Use another port, e.g. `--port 8002`, and open that address |
+| `Address already in use` / port busy | The app is probably still running: double-click `stop_web_app.bat`, or use another port (`--port 8002`) |
+| `stop_web_app.bat` says "No web app is running on port 8001" | The app is already stopped, or was started on another port: run `stop_web_app.bat <port>` |
 | An answer fails with "rate limit" | Groq's free tier has per-minute limits; wait a minute and ask again |
 | Download errors from Hugging Face | Check the internet connection (or proxy) and start again; finished downloads are reused |
 | The notebook file is not found | Keep the folder structure from step 2; `web_app` and `notebooks` must sit side by side |
